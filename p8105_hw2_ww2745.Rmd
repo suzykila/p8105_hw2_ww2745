@@ -1,0 +1,11 @@
+---
+title: "p8105_hw2_ww2745"
+author: "ww2745"
+date: "2024-10-01"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
