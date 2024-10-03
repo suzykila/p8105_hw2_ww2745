@@ -67,14 +67,29 @@ b =
 
 ```
 
++ There are `r nrow(station_distinct)` distinct stations in NYC.
 
-Answers:
++ `r nrow(ada_compliant)` of them are ADA compliant.
 
-There are `r nrow(station_distinct)` distinct stations in NYC.
++ The proportion of station entrances / exits without vending allow entrance is `r a/b`.
 
-`r nrow(ada_compliant)` of them are ADA compliant.
 
-The proportion of station entrances / exits without vending allow entrance is `r a/b`.
+Reformat the data:
+```{r reformat_data}
+# reformat
+dist_route_df = station_distinct |> 
+  # convert
+  mutate_at(vars(route8:route11), as.character) |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route",
+    values_to = "train")
 
+head(dist_route_df)
+```
+
+ + There are `r nrow(filter(dist_route_df, train == "A"))` distinct stations serve the A train.
+ 
+ + There are `r nrow(filter(dist_route_df, train == "A" & ada == "TRUE"))` distinct stations serve the A train and are ADA compliant.
 
 

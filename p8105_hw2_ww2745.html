@@ -412,11 +412,38 @@ NYC transit dataset, clean the variable names, select the columns we
 desire and change the type of the variable ‘entry’. There are 1868 rows
 and 19 columns in the <code>nyc_tran_df</code>. These data are not
 tidy.</p>
-<p>Answers:</p>
-<p>There are 465 distinct stations in NYC.</p>
-<p>84 of them are ADA compliant.</p>
-<p>The proportion of station entrances / exits without vending allow
-entrance is 0.3770492.</p>
+<ul>
+<li><p>There are 465 distinct stations in NYC.</p></li>
+<li><p>84 of them are ADA compliant.</p></li>
+<li><p>The proportion of station entrances / exits without vending allow
+entrance is 0.3770492.</p></li>
+</ul>
+<p>Reformat the data:</p>
+<pre class="r"><code># reformat
+dist_route_df = station_distinct |&gt; 
+  # convert
+  mutate_at(vars(route8:route11), as.character) |&gt; 
+  pivot_longer(
+    route1:route11,
+    names_to = &quot;route&quot;,
+    values_to = &quot;train&quot;)
+
+head(dist_route_df)</code></pre>
+<pre><code>## # A tibble: 6 × 10
+##   line     station_name station_latitude station_longitude entry vending
+##   &lt;chr&gt;    &lt;chr&gt;                   &lt;dbl&gt;             &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;  
+## 1 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## 2 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## 3 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## 4 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## 5 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## 6 4 Avenue 25th St                  40.7             -74.0 TRUE  TRUE   
+## # ℹ 4 more variables: entrance_type &lt;chr&gt;, ada &lt;lgl&gt;, route &lt;chr&gt;, train &lt;chr&gt;</code></pre>
+<ul>
+<li><p>There are 60 distinct stations serve the A train.</p></li>
+<li><p>There are 17 distinct stations serve the A train and are ADA
+compliant.</p></li>
+</ul>
 </div>
 
 
