@@ -2,10 +2,32 @@
 title: "p8105_hw2_ww2745"
 author: "ww2745"
 date: "2024-10-01"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Problem 1
+Read and clean the data.
+
+```{r nyc_data}
+nyc_tran_df = 
+  read_csv(
+    "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  select(
+    line, station_name, station_latitude, station_longitude, starts_with("route"), entry, vending, entrance_type, ada
+    ) |>  
+  mutate(
+    entry = case_match(entry,
+                            "YES" ~ TRUE,
+                            "NO" ~ FALSE))
+
+  
+print(nyc_tran_df, n = 12)
+
 ```
 
