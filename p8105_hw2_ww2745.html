@@ -419,14 +419,13 @@ tidy.</p>
 entrance is 0.3770492.</p></li>
 </ul>
 <p>Reformat the data:</p>
-<pre class="r"><code># reformat
-dist_route_df = station_distinct |&gt; 
-  # convert
-  mutate_at(vars(route8:route11), as.character) |&gt; 
-  pivot_longer(
-    route1:route11,
-    names_to = &quot;route&quot;,
-    values_to = &quot;train&quot;)
+<pre class="r"><code>dist_route_df = station_distinct |&gt; 
+
+mutate_at(vars(route8:route11), as.character) |&gt; 
+pivot_longer(
+  route1:route11,
+  names_to = &quot;route&quot;,
+  values_to = &quot;train&quot;)
 
 head(dist_route_df)</code></pre>
 <pre><code>## # A tibble: 6 × 10
@@ -444,6 +443,25 @@ head(dist_route_df)</code></pre>
 <li><p>There are 17 distinct stations serve the A train and are ADA
 compliant.</p></li>
 </ul>
+</div>
+<div id="problem-2" class="section level1">
+<h1>Problem 2</h1>
+<p>Read and create <code>mr_trash</code> dataset.</p>
+<pre class="r"><code>trash_path = &quot;./data/202409 Trash Wheel Collection Data.xlsx&quot;
+mr_trash = 
+  read_excel(
+  path = trash_path,
+  sheet = &quot;Mr. Trash Wheel&quot;,
+  range = cell_cols(&quot;A2:N655&quot;)) |&gt; 
+  janitor::clean_names() |&gt;  
+  drop_na(dumpster) |&gt;  
+  mutate(
+    sports_balls = round(sports_balls),
+    sports_balls = as.integer(sports_balls)
+  )</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...15`
+## • `` -&gt; `...16`</code></pre>
 </div>
 
 

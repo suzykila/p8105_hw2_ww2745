@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1
@@ -76,14 +77,14 @@ b =
 
 Reformat the data:
 ```{r reformat_data}
-# reformat
+
 dist_route_df = station_distinct |> 
-  # convert
-  mutate_at(vars(route8:route11), as.character) |> 
-  pivot_longer(
-    route1:route11,
-    names_to = "route",
-    values_to = "train")
+
+mutate_at(vars(route8:route11), as.character) |> 
+pivot_longer(
+  route1:route11,
+  names_to = "route",
+  values_to = "train")
 
 head(dist_route_df)
 ```
@@ -92,4 +93,21 @@ head(dist_route_df)
  
  + There are `r nrow(filter(dist_route_df, train == "A" & ada == "TRUE"))` distinct stations serve the A train and are ADA compliant.
 
+# Problem 2
+
+Read and create `mr_trash` dataset.
+```{r import_data, warning=FALSE}
+trash_path = "./data/202409 Trash Wheel Collection Data.xlsx"
+mr_trash = 
+  read_excel(
+  path = trash_path,
+  sheet = "Mr. Trash Wheel",
+  range = cell_cols("A2:N655")) |> 
+  janitor::clean_names() |>  
+  drop_na(dumpster) |>  
+  mutate(
+    sports_balls = round(sports_balls),
+    sports_balls = as.integer(sports_balls)
+  )
+```
 
