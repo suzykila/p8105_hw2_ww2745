@@ -371,6 +371,9 @@ display: none;
   mutate(
     entry = case_match(entry,
                             &quot;YES&quot; ~ TRUE,
+                            &quot;NO&quot; ~ FALSE),
+    vending = case_match(vending,
+                            &quot;YES&quot; ~ TRUE,
                             &quot;NO&quot; ~ FALSE))</code></pre>
 <pre><code>## Rows: 1868 Columns: 32
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -400,7 +403,20 @@ display: none;
 ## # ℹ 1,856 more rows
 ## # ℹ 12 more variables: route4 &lt;chr&gt;, route5 &lt;chr&gt;, route6 &lt;chr&gt;, route7 &lt;chr&gt;,
 ## #   route8 &lt;dbl&gt;, route9 &lt;dbl&gt;, route10 &lt;dbl&gt;, route11 &lt;dbl&gt;, entry &lt;lgl&gt;,
-## #   vending &lt;chr&gt;, entrance_type &lt;chr&gt;, ada &lt;lgl&gt;</code></pre>
+## #   vending &lt;lgl&gt;, entrance_type &lt;chr&gt;, ada &lt;lgl&gt;</code></pre>
+<p>The dataset contains the following variables: line, station_name,
+station_latitude, station_longitude, route1, route2, route3, route4,
+route5, route6, route7, route8, route9, route10, route11, entry,
+vending, entrance_type, ada. For the previous chunck, we have loaded the
+NYC transit dataset, clean the variable names, select the columns we
+desire and change the type of the variable ‘entry’. There are 1868 rows
+and 19 columns in the <code>nyc_tran_df</code>. These data are not
+tidy.</p>
+<p>Answers:</p>
+<p>There are 465 distinct stations in NYC.</p>
+<p>84 of them are ADA compliant.</p>
+<p>The proportion of station entrances / exits without vending allow
+entrance is 0.3770492.</p>
 </div>
 
 
