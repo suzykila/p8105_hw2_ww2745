@@ -31,3 +31,58 @@ print(nyc_tran_df, n = 12)
 
 ```
 
+The dataset contains the following variables: `r colnames(nyc_tran_df)`. For the previous chunck, we have loaded the NYC transit dataset, clean the variable names, select the columns we desire and change the type of the variable 'entry'. There are `r nrow(nyc_tran_df)` rows and `r ncol(nyc_tran_df)` columns in the `nyc_tran_df`. These data are not tidy.
+
+
+```{r using_these_data, include = FALSE}
+station_distinct =
+  distinct(
+    nyc_trans_df, line, station_name, .keep_all = TRUE
+    )
+
+ada_compliant = 
+  filter(
+    station_distinct, ada == TRUE
+  )
+
+```
+
+```{r using_data_prop, include = FALSE}
+n1 = 
+  filter(
+    nyc_trans_df, vending == FALSE & entry == TRUE
+  ) %>% 
+  nrow()
+
+n2 = 
+  filter(
+    nyc_trans_df, vending == FALSE
+  ) %>% 
+  nrow()
+
+```
+
+
+* **Answers:**
+  + There are `r nrow(station_distinct)` stations in NYC.
+  + And `r nrow(ada_compliant)` of them are ADA compliant.
+  + The proportion of station entrances / exits without vending allow entrance is `r n1/n2`.
+
+Reformat the data:
+```{r reformat_data}
+# reformat
+dist_route_df = station_distinct %>%
+  # convert
+  mutate_at(vars(route8:route11), as.character) %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route",
+    values_to = "train")
+
+head(dist_route_df)
+```
+
+ + The number of distinct stations serve the A train is `r nrow(filter(dist_route_df, train == "A"))`.
+ + The number of distinct stations serve the A train and are ADA compliant is `r nrow(filter(dist_route_df, train == "A" & ada == "TRUE"))`.
+
+
