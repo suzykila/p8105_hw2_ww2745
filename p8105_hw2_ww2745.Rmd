@@ -75,7 +75,7 @@ b =
 + The proportion of station entrances / exits without vending allow entrance is `r a/b`.
 
 
-Reformat the data:
+Reformat the data.
 ```{r reformat_data}
 
 dist_route_df = station_distinct |> 
@@ -97,17 +97,55 @@ head(dist_route_df)
 
 Read and create `mr_trash` dataset.
 ```{r import_data, warning=FALSE}
-trash_path = "./data/202409 Trash Wheel Collection Data.xlsx"
 mr_trash = 
   read_excel(
-  path = trash_path,
+  "./data/202409 Trash Wheel Collection Data.xlsx",
   sheet = "Mr. Trash Wheel",
-  range = cell_cols("A2:N655")) |> 
+  range = ("A2:N655")) |> 
   janitor::clean_names() |>  
   drop_na(dumpster) |>  
   mutate(
     sports_balls = round(sports_balls),
     sports_balls = as.integer(sports_balls)
-  )
+  ) |> 
+  mutate(trash_wheel = "Mr. Trash Wheel") 
 ```
+
+Read and clean organize the data for Professor Trash Wheel and Gwynnda.
+```{r prof_and_gwy_data}
+prof_df =
+  read_excel(
+    "./data/202409 Trash Wheel Collection Data.xlsx",
+		sheet = "Professor Trash Wheel",
+		range=("A2:M123")	) |> 
+	janitor::clean_names() |> 
+	drop_na(dumpster) |> 
+  mutate(trash_wheel = "Professor Trash Wheel") 
+
+
+gwy_df = 
+	read_excel(
+		"./data/202409 Trash Wheel Collection Data.xlsx",
+		sheet = "Gwynnda Trash Wheel",
+		range=("A2:L266")	)|> 
+	janitor::clean_names() |> 
+	drop_na(dumpster) |> 
+  mutate(trash_wheel = "Gwynnda Trash Wheel")
+```
+
+Combine three datasets.
+```{r merge_data}
+combined_data =
+  left_join(prof_df, gwy_df, by = "trash_wheel")  
+combined_data =
+  left_join(combined_data, mr_trash, by = "trash_wheel") 
+
+```
+
+This dataset contains information from the Mr. Trashwheel trash collector,Professor Trash Wheel and Gwynnda. The dataset contains information on year, month, and trash collected, include some specific types of trash. There are a total of `r nrow(combined_data)` rows in the final dataset. 
+
+
+  + The total weight of trash collected by Professor Trash Wheel was `r mr_trash |>  pull(weight_tons) |> sum()` tons.
+  
+  + The total number of cigarette butts collected by Gwynnda in June of 2022 was `r gwy_df |>  filter(year == 2022 & month == "June",)  |>  pull(cigarette_butts) |>  sum()`.
 

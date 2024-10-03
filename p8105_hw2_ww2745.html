@@ -418,7 +418,7 @@ tidy.</p>
 <li><p>The proportion of station entrances / exits without vending allow
 entrance is 0.3770492.</p></li>
 </ul>
-<p>Reformat the data:</p>
+<p>Reformat the data.</p>
 <pre class="r"><code>dist_route_df = station_distinct |&gt; 
 
 mutate_at(vars(route8:route11), as.character) |&gt; 
@@ -447,21 +447,53 @@ compliant.</p></li>
 <div id="problem-2" class="section level1">
 <h1>Problem 2</h1>
 <p>Read and create <code>mr_trash</code> dataset.</p>
-<pre class="r"><code>trash_path = &quot;./data/202409 Trash Wheel Collection Data.xlsx&quot;
-mr_trash = 
+<pre class="r"><code>mr_trash = 
   read_excel(
-  path = trash_path,
+  &quot;./data/202409 Trash Wheel Collection Data.xlsx&quot;,
   sheet = &quot;Mr. Trash Wheel&quot;,
-  range = cell_cols(&quot;A2:N655&quot;)) |&gt; 
+  range = (&quot;A2:N655&quot;)) |&gt; 
   janitor::clean_names() |&gt;  
   drop_na(dumpster) |&gt;  
   mutate(
     sports_balls = round(sports_balls),
     sports_balls = as.integer(sports_balls)
-  )</code></pre>
-<pre><code>## New names:
-## • `` -&gt; `...15`
-## • `` -&gt; `...16`</code></pre>
+  ) |&gt; 
+  mutate(trash_wheel = &quot;Mr. Trash Wheel&quot;) </code></pre>
+<p>Read and clean organize the data for Professor Trash Wheel and
+Gwynnda.</p>
+<pre class="r"><code>prof_df =
+  read_excel(
+    &quot;./data/202409 Trash Wheel Collection Data.xlsx&quot;,
+        sheet = &quot;Professor Trash Wheel&quot;,
+        range=(&quot;A2:M123&quot;)   ) |&gt; 
+    janitor::clean_names() |&gt; 
+    drop_na(dumpster) |&gt; 
+  mutate(trash_wheel = &quot;Professor Trash Wheel&quot;) 
+
+
+gwy_df = 
+    read_excel(
+        &quot;./data/202409 Trash Wheel Collection Data.xlsx&quot;,
+        sheet = &quot;Gwynnda Trash Wheel&quot;,
+        range=(&quot;A2:L266&quot;)   )|&gt; 
+    janitor::clean_names() |&gt; 
+    drop_na(dumpster) |&gt; 
+  mutate(trash_wheel = &quot;Gwynnda Trash Wheel&quot;)</code></pre>
+<p>Combine three datasets.</p>
+<pre class="r"><code>combined_data =
+  left_join(prof_df, gwy_df, by = &quot;trash_wheel&quot;)  
+combined_data =
+  left_join(combined_data, mr_trash, by = &quot;trash_wheel&quot;) </code></pre>
+<p>This dataset contains information from the Mr. Trashwheel trash
+collector,Professor Trash Wheel and Gwynnda. The dataset contains
+information on year, month, and trash collected, include some specific
+types of trash. There are a total of 119 rows in the final dataset.</p>
+<ul>
+<li><p>The total weight of trash collected by Professor Trash Wheel was
+2091.18 tons.</p></li>
+<li><p>The total number of cigarette butts collected by Gwynnda in June
+of 2022 was 1.812^{4}.</p></li>
+</ul>
 </div>
 
 
